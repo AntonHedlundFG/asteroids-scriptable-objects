@@ -16,7 +16,6 @@ namespace DefaultNamespace.GameEvents
             {
                 _listeners[i].OnEventRaised();
             }
-
             _event?.Invoke();
         }
 
