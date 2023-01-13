@@ -8,6 +8,7 @@ public class CustomAsteroidsInspector : EditorWindow
 {
     private VisualElement asteroidsElement;
     private VisualElement shipElement;
+    private VisualElement asteroidSettingsElement;
 
     [MenuItem("Tools/Asteroids Inspector")]
     public static void ShowEditor()
@@ -25,6 +26,7 @@ public class CustomAsteroidsInspector : EditorWindow
 
         GenerateAsteroidGUI();
         rootVisualElement.Add(asteroidsElement);
+        asteroidsElement.visible = false;
 
     }
     private GroupBox GenerateRadioButtons()
@@ -47,27 +49,36 @@ public class CustomAsteroidsInspector : EditorWindow
     public void GenerateAsteroidGUI()
     {
         Label Header = new Label("Asteroid Settings");
-
-
-        //Setting up the dropdown menu that lets you browse through all instances of the AsteroidSettings ScriptableObject.
-        string[] SettingsGUID = AssetDatabase.FindAssets("t: AsteroidSettings");
-        AsteroidSettings[] Settings = new AsteroidSettings[SettingsGUID.Length];
-        for (int i = 0; i < Settings.Length; i++)
-        {
-            Settings[i] = (AsteroidSettings)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(SettingsGUID[i]), typeof(AsteroidSettings));
-        }
-
-        DropdownField SettingsDropdown = new DropdownField("Settings");
-        List<string> choices = new List<string>();
-        foreach (AsteroidSettings astS in Settings)
-        {
-            choices.Add(astS.name);
-        }
-        SettingsDropdown.choices = choices;
-        SettingsDropdown.index = 0;
-
         asteroidsElement.Add(Header);
-        asteroidsElement.Add(SettingsDropdown);
-        asteroidsElement.visible = false;
+
+        asteroidsElement.Add(DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset"));
+    }
+
+
+
+    //Creates a Dropdown field containing all assets of a specific ScriptableObject type.
+    public static DropdownField DropdownOfAllAssetsOfType<T>(string header) where T : ScriptableObject
+    {
+        T[] assets = GetAssetsOfType<T>();
+        List<string> choices = new List<string>();
+        foreach (T asset in assets)
+        {
+            choices.Add(asset.name);
+        }
+        DropdownField dropdown = new DropdownField(header);
+        dropdown.choices = choices;
+        return dropdown;
+    }
+
+    //Returns a list of all asset instances of a specific ScriptableObject type.
+    public static T[] GetAssetsOfType<T>() where T : ScriptableObject
+    {
+        string[] guids = AssetDatabase.FindAssets($"t: {typeof(T).Name}");
+        T[] a = new T[guids.Length];
+        for (int i = 0; i < guids.Length; i++)
+        {
+            a[i] = (T)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(guids[i]), typeof(T));
+        }
+        return a;
     }
 }
