@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c4ec00acc1bd0f4299f5e907ce86f91, type: 3}
-  m_Name: MoreAsteroidSettings
+  m_Name: Base Asteroid
   m_EditorClassIdentifier: 
-  MinForce: 4.42
-  MaxForce: 10
-  MinSize: 3
+  MinForce: 5.49
+  MaxForce: 9.6
+  MinSize: 2.51
   MaxSize: 3
   MinTorque: 3
   MaxTorque: 3

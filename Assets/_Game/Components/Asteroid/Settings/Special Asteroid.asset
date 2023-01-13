@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6c4ec00acc1bd0f4299f5e907ce86f91, type: 3}
-  m_Name: AsteroidSettings
+  m_Name: Special Asteroid
   m_EditorClassIdentifier: 
-  MinForce: 4.42
+  MinForce: 3.19
   MaxForce: 10
   MinSize: 3
   MaxSize: 3
