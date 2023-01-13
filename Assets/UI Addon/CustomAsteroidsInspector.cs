@@ -6,103 +6,68 @@ using UnityEngine.UIElements;
 
 public class CustomAsteroidsInspector : EditorWindow
 {
-    private struct AsteroidGUI
-    {
-        public Label Header;
-
-        public DropdownField SettingsDropdown;
-        AsteroidSettings[] Settings;
-
-        public AsteroidGUI(string header)
-        {
-            Header = new Label(header);
-            
-
-            //Setting up the dropdown menu that lets you browse through all instances of the AsteroidSettings ScriptableObject.
-            string[] SettingsGUID = AssetDatabase.FindAssets("t: AsteroidSettings");
-            Settings = new AsteroidSettings[SettingsGUID.Length];
-            for (int i = 0; i < Settings.Length; i++)
-            {
-                Settings[i] = (AsteroidSettings) AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(SettingsGUID[i]), typeof(AsteroidSettings));
-            }
-
-            SettingsDropdown = new DropdownField("Settings");
-            List<string> choices = new List<string>();
-            foreach(AsteroidSettings astS in Settings)
-            {
-                choices.Add(astS.name);
-            }
-            SettingsDropdown.choices = choices;
-            SettingsDropdown.index = 0;
-            
-            
-        }
-    }
-
-    private struct ShipGUI
-    {
-        public Label Header;
-
-        public ShipGUI(string header)
-        {
-            Header = new Label(header);
-        }
-    }
-
-    private AsteroidGUI aGUI;
-    private ShipGUI sGUI;
+    private VisualElement asteroidsElement;
+    private VisualElement shipElement;
 
     [MenuItem("Tools/Asteroids Inspector")]
     public static void ShowEditor()
     {
         EditorWindow window = GetWindow<CustomAsteroidsInspector>();
         window.titleContent = new GUIContent("Asteroids");
-
-        
     }
 
     public void CreateGUI()
     {
-        aGUI = new AsteroidGUI("Asteroid Settings");
-        sGUI = new ShipGUI("Ship Settings");
+        asteroidsElement = new VisualElement();
+        shipElement = new VisualElement();
 
+        rootVisualElement.Add(GenerateRadioButtons());
+
+        GenerateAsteroidGUI();
+        rootVisualElement.Add(asteroidsElement);
+
+    }
+    private GroupBox GenerateRadioButtons()
+    {
         GroupBox radioButtons = new GroupBox("Tool choice:");
 
         RadioButton asteroidButton = new RadioButton("Asteroids");
-        asteroidButton.RegisterValueChangedCallback(CreateAsteroidGUI);
+        asteroidButton.RegisterValueChangedCallback(ShowAsteroidsGUI);
         radioButtons.Add(asteroidButton);
 
         RadioButton shipButton = new RadioButton("Ships");
-        shipButton.RegisterValueChangedCallback(CreateShipGUI);
+        shipButton.RegisterValueChangedCallback(ShowShipGUI);
         radioButtons.Add(shipButton);
 
-        rootVisualElement.Add(radioButtons);
-    }
-    public void CreateAsteroidGUI(ChangeEvent<bool> evt)
-    {
-        if(!evt.newValue)
-        {
-            rootVisualElement.Remove(aGUI.Header);
-            rootVisualElement.Remove(aGUI.SettingsDropdown);
-        }
-
-        if (evt.newValue)
-        {
-            rootVisualElement.Add(aGUI.Header);
-            rootVisualElement.Add(aGUI.SettingsDropdown);
-        }
+        return radioButtons;
     }
 
-    public void CreateShipGUI(ChangeEvent<bool> evt)
+    public void ShowAsteroidsGUI(ChangeEvent<bool> evt) => asteroidsElement.visible = evt.newValue;
+    public void ShowShipGUI(ChangeEvent<bool> evt) => shipElement.visible = evt.newValue;
+    public void GenerateAsteroidGUI()
     {
-        if (!evt.newValue)
+        Label Header = new Label("Asteroid Settings");
+
+
+        //Setting up the dropdown menu that lets you browse through all instances of the AsteroidSettings ScriptableObject.
+        string[] SettingsGUID = AssetDatabase.FindAssets("t: AsteroidSettings");
+        AsteroidSettings[] Settings = new AsteroidSettings[SettingsGUID.Length];
+        for (int i = 0; i < Settings.Length; i++)
         {
-            rootVisualElement.Remove(sGUI.Header);
+            Settings[i] = (AsteroidSettings)AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(SettingsGUID[i]), typeof(AsteroidSettings));
         }
 
-        if (evt.newValue)
+        DropdownField SettingsDropdown = new DropdownField("Settings");
+        List<string> choices = new List<string>();
+        foreach (AsteroidSettings astS in Settings)
         {
-            rootVisualElement.Add(sGUI.Header);
+            choices.Add(astS.name);
         }
+        SettingsDropdown.choices = choices;
+        SettingsDropdown.index = 0;
+
+        asteroidsElement.Add(Header);
+        asteroidsElement.Add(SettingsDropdown);
+        asteroidsElement.visible = false;
     }
 }
