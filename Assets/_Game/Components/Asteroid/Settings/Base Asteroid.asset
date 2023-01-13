@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c4ec00acc1bd0f4299f5e907ce86f91, type: 3}
   m_Name: Base Asteroid
   m_EditorClassIdentifier: 
-  MinForce: 5.49
+  MinForce: 7.26
   MaxForce: 9.6
-  MinSize: 2.51
-  MaxSize: 3
-  MinTorque: 3
+  MinSize: 2.38
+  MaxSize: 2.74
+  MinTorque: 2.16
   MaxTorque: 3
