@@ -6,9 +6,11 @@ using UnityEngine.UIElements;
 
 public class CustomAsteroidsInspector : EditorWindow
 {
-    private VisualElement asteroidsElement;
-    private VisualElement shipElement;
-    private VisualElement asteroidSettingsElement;
+    private VisualElement _asteroidsRoot;
+    private VisualElement _shipRoot;
+
+    private VisualElement _asteroidSettingRoot;
+    private DropdownField _asteroidSettingDropdown;
 
     [MenuItem("Tools/Asteroids Inspector")]
     public static void ShowEditor()
@@ -19,14 +21,16 @@ public class CustomAsteroidsInspector : EditorWindow
 
     public void CreateGUI()
     {
-        asteroidsElement = new VisualElement();
-        shipElement = new VisualElement();
+        _asteroidsRoot = new VisualElement();
+        _shipRoot = new VisualElement();
 
         rootVisualElement.Add(GenerateRadioButtons());
 
         GenerateAsteroidGUI();
-        rootVisualElement.Add(asteroidsElement);
-        asteroidsElement.visible = false;
+        rootVisualElement.Add(_asteroidsRoot);
+        _asteroidsRoot.visible = false;
+
+        //TODO make a GenerateShipGUI() method etc.
 
     }
     private GroupBox GenerateRadioButtons()
@@ -44,14 +48,31 @@ public class CustomAsteroidsInspector : EditorWindow
         return radioButtons;
     }
 
-    public void ShowAsteroidsGUI(ChangeEvent<bool> evt) => asteroidsElement.visible = evt.newValue;
-    public void ShowShipGUI(ChangeEvent<bool> evt) => shipElement.visible = evt.newValue;
+    public void ShowAsteroidsGUI(ChangeEvent<bool> evt) => _asteroidsRoot.visible = evt.newValue;
+    public void ShowShipGUI(ChangeEvent<bool> evt) => _shipRoot.visible = evt.newValue;
     public void GenerateAsteroidGUI()
     {
         Label Header = new Label("Asteroid Settings");
-        asteroidsElement.Add(Header);
+        _asteroidsRoot.Add(Header);
 
-        asteroidsElement.Add(DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset"));
+        _asteroidSettingDropdown = DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset");
+        _asteroidsRoot.Add(_asteroidSettingDropdown);
+        _asteroidSettingDropdown.RegisterValueChangedCallback(ChooseAsteroidSetting);
+    }
+    public void ChooseAsteroidSetting(ChangeEvent<string> evt)
+    {
+        if (_asteroidSettingDropdown.index < 0) { return; }
+        if (_asteroidSettingRoot != null) { _asteroidsRoot.Remove(_asteroidSettingRoot); }
+
+        AsteroidSettings[] allSettings = GetAssetsOfType<AsteroidSettings>();
+        AsteroidSettings currentSetting = allSettings[_asteroidSettingDropdown.index];
+
+        _asteroidSettingRoot = new VisualElement();
+        
+        //HERE IS WHERE I SHOULD POPULATE THE ASTEROID SETTING VIEW
+
+        _asteroidsRoot.Add(_asteroidSettingRoot);
+
     }
 
 
