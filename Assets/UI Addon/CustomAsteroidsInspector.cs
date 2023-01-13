@@ -10,9 +10,32 @@ public class CustomAsteroidsInspector : EditorWindow
     {
         public Label Header;
 
+        public DropdownField SettingsDropdown;
+        AsteroidSettings[] Settings;
+
         public AsteroidGUI(string header)
         {
             Header = new Label(header);
+            
+
+            //Setting up the dropdown menu that lets you browse through all instances of the AsteroidSettings ScriptableObject.
+            string[] SettingsGUID = AssetDatabase.FindAssets("t: AsteroidSettings");
+            Settings = new AsteroidSettings[SettingsGUID.Length];
+            for (int i = 0; i < Settings.Length; i++)
+            {
+                Settings[i] = (AsteroidSettings) AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(SettingsGUID[i]), typeof(AsteroidSettings));
+            }
+
+            SettingsDropdown = new DropdownField("Settings");
+            List<string> choices = new List<string>();
+            foreach(AsteroidSettings astS in Settings)
+            {
+                choices.Add(astS.name);
+            }
+            SettingsDropdown.choices = choices;
+            SettingsDropdown.index = 0;
+            
+            
         }
     }
 
@@ -60,11 +83,13 @@ public class CustomAsteroidsInspector : EditorWindow
         if(!evt.newValue)
         {
             rootVisualElement.Remove(aGUI.Header);
+            rootVisualElement.Remove(aGUI.SettingsDropdown);
         }
 
         if (evt.newValue)
         {
             rootVisualElement.Add(aGUI.Header);
+            rootVisualElement.Add(aGUI.SettingsDropdown);
         }
     }
 
