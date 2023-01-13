@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -52,25 +53,34 @@ public class CustomAsteroidsInspector : EditorWindow
     public void ShowShipGUI(ChangeEvent<bool> evt) => _shipRoot.visible = evt.newValue;
     public void GenerateAsteroidGUI()
     {
-        Label Header = new Label("Asteroid Settings");
-        _asteroidsRoot.Add(Header);
-
         _asteroidSettingDropdown = DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset");
         _asteroidsRoot.Add(_asteroidSettingDropdown);
         _asteroidSettingDropdown.RegisterValueChangedCallback(ChooseAsteroidSetting);
     }
     public void ChooseAsteroidSetting(ChangeEvent<string> evt)
     {
-        if (_asteroidSettingDropdown.index < 0) { return; }
-        if (_asteroidSettingRoot != null) { _asteroidsRoot.Remove(_asteroidSettingRoot); }
+        if (_asteroidSettingDropdown.index < 0) { return; } //Do nothing if no item has been chosen
+        if (_asteroidSettingRoot != null) { _asteroidsRoot.Remove(_asteroidSettingRoot); } //Remove previously shown visual element
 
+        //Finds the currently chosen AsteroidSettings instance in the Dropdown menu
         AsteroidSettings[] allSettings = GetAssetsOfType<AsteroidSettings>();
         AsteroidSettings currentSetting = allSettings[_asteroidSettingDropdown.index];
 
+        //Resets the visual element
         _asteroidSettingRoot = new VisualElement();
-        
-        //HERE IS WHERE I SHOULD POPULATE THE ASTEROID SETTING VIEW
 
+        //Iterate through all visible values in the chosen AsteroidSettings instance, and show them in the editor. Also binds them so they are editable
+        SerializedObject so = new SerializedObject(currentSetting);
+        SerializedProperty sp = so.GetIterator();
+        while (sp.NextVisible(true))
+        {
+            if (sp.name == "m_Script") { continue; } //For some reason the reference to the C# Script shows up with this iterator. This manually hides this reference
+            PropertyField pf = new PropertyField(sp, sp.name);
+            pf.Bind(so);
+            _asteroidSettingRoot.Add(pf);
+        }
+
+        //Finally, add the visual element to the root
         _asteroidsRoot.Add(_asteroidSettingRoot);
 
     }
