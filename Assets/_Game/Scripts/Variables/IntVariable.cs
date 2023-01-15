@@ -7,7 +7,7 @@ namespace Variables
     [CreateAssetMenu(fileName = "new FloatVariable", menuName = "ScriptableObjects/Variables/IntVariable")]
     public class IntVariable : ScriptableObject
     {
-        [SerializeField] private int _value;
+        public int BaseValue;
 
         private int _currentValue;
 
@@ -25,7 +25,7 @@ namespace Variables
 
         private void OnEnable()
         {
-            _currentValue = _value;
+            _currentValue = BaseValue;
         }
     }
 
