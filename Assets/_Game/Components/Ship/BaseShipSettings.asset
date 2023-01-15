@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Throttle: {fileID: 11400000, guid: beb4542c9c678f14cb3e3a74aead4314, type: 2}
   Rotation: {fileID: 11400000, guid: eb6f17e4493560c4b9750572ccc4f906, type: 2}
-  Health: {fileID: 11400000, guid: 40cfb1e1b58e0f84a966e03698c56110, type: 2}
+  Health: {fileID: 11400000, guid: a29c193f4c943534ab4728aacaf9839a, type: 2}
