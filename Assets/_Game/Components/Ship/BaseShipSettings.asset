@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 975f3f63b1053ce47bc222ebc76a000e, type: 3}
+  m_Name: BaseShipSettings
+  m_EditorClassIdentifier: 
+  Throttle: {fileID: 11400000, guid: beb4542c9c678f14cb3e3a74aead4314, type: 2}
+  Rotation: {fileID: 11400000, guid: eb6f17e4493560c4b9750572ccc4f906, type: 2}
+  Health: {fileID: 11400000, guid: 40cfb1e1b58e0f84a966e03698c56110, type: 2}

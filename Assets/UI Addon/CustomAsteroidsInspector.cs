@@ -13,6 +13,9 @@ public class CustomAsteroidsInspector : EditorWindow
     private VisualElement _asteroidSettingRoot;
     private DropdownField _asteroidSettingDropdown;
 
+    private VisualElement _shipSettingRoot;
+    private DropdownField _shipSettingDropdown;
+
     [MenuItem("Tools/Asteroids Inspector")]
     public static void ShowEditor()
     {
@@ -31,7 +34,10 @@ public class CustomAsteroidsInspector : EditorWindow
         rootVisualElement.Add(_asteroidsRoot);
         _asteroidsRoot.visible = false;
 
-        //TODO make a GenerateShipGUI() method etc.
+        
+        GenerateShipGUI();
+        rootVisualElement.Add(_shipRoot);
+        _shipRoot.visible = false;
 
     }
     private GroupBox GenerateRadioButtons()
@@ -56,6 +62,11 @@ public class CustomAsteroidsInspector : EditorWindow
         _asteroidSettingDropdown = DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset");
         _asteroidsRoot.Add(_asteroidSettingDropdown);
         _asteroidSettingDropdown.RegisterValueChangedCallback(ChooseAsteroidSetting);
+    }
+    public void GenerateShipGUI()
+    {
+        //IMPLEMENT THIS STUFF TO FILL _shipRoot;
+
     }
     public void ChooseAsteroidSetting(ChangeEvent<string> evt)
     {
