@@ -9,9 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 975f3f63b1053ce47bc222ebc76a000e, type: 3}
-  m_Name: OtherShipSettings
+  m_Script: {fileID: 11500000, guid: f9211020e65c46ccbf7bdab376fceef6, type: 3}
+  m_Name: OtherShipHealthObservable
   m_EditorClassIdentifier: 
-  Throttle: 4.29
-  Rotation: 3
-  Health: {fileID: 11400000, guid: e59cc67e93787d049a00f4afbc6bc7f8, type: 2}
+  BaseValue: 28
+  _onValueChangedEvent: {fileID: 11400000, guid: 1c89cb8edd31962449ecaa94187a07fc, type: 2}

@@ -126,28 +126,33 @@ public class CustomAsteroidsInspector : EditorWindow
         //Resets the visual element
         _shipSettingRoot = new VisualElement();
 
-        //Manually add Throttle and Rotation
-        SerializedObject so = new SerializedObject(currentSetting);
+        AddThrottleAndRotation(currentSetting, _shipSettingRoot);
+        AddHealth(currentSetting, _shipSettingRoot);
+
+        //Finally, add the visual element to the root
+        _shipRoot.Add(_shipSettingRoot);
+    }
+
+    private void AddThrottleAndRotation(ShipSettings setting, VisualElement rootVE)
+    {
+        SerializedObject so = new SerializedObject(setting);
         SerializedProperty spThrottle = so.FindProperty("Throttle");
         SerializedProperty spRotation = so.FindProperty("Rotation");
         PropertyField pfThrottle = new PropertyField(spThrottle, "Throttle");
         PropertyField pfRotation = new PropertyField(spRotation, "Rotation");
         pfThrottle.Bind(so);
         pfRotation.Bind(so);
-        _shipSettingRoot.Add(pfThrottle);
-        _shipSettingRoot.Add(pfRotation);
-
-        //Add Health reference, different approach since Health is not an Int value but a IntVariable ScriptableObject.
-        so = new SerializedObject(currentSetting.Health);
+        rootVE.Add(pfThrottle);
+        rootVE.Add(pfRotation);
+    }
+    private void AddHealth(ShipSettings setting, VisualElement rootVE)
+    {
+        SerializedObject so = new SerializedObject(setting.Health);
         SerializedProperty spHealth = so.FindProperty("BaseValue");
         PropertyField pfHealth = new PropertyField(spHealth, "Starting Health");
         pfHealth.Bind(so);
         _shipSettingRoot.Add(pfHealth);
-
-        //Finally, add the visual element to the root
-        _shipRoot.Add(_shipSettingRoot);
     }
-
 
     //Creates a Dropdown field containing all assets of a specific ScriptableObject type.
     public static DropdownField DropdownOfAllAssetsOfType<T>(string header) where T : ScriptableObject
