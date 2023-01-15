@@ -6,7 +6,7 @@ using Variables;
 [CreateAssetMenu(fileName = "new ShipSettings", menuName = "ScriptableObjects/Ship Settings")]
 public class ShipSettings : ScriptableObject
 {
-    public FloatVariable Throttle;
-    public FloatVariable Rotation;
+    [Range(0f, 10f)] public float Throttle;
+    [Range(0f, 10f)] public float Rotation;
     public IntVariable Health;
 }

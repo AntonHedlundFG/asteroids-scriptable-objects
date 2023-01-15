@@ -126,18 +126,23 @@ public class CustomAsteroidsInspector : EditorWindow
         //Resets the visual element
         _shipSettingRoot = new VisualElement();
 
-        //Iterate through all visible values in the chosen AsteroidSettings instance, and show them in the editor. Also binds them so they are editable
+        //Manually add Throttle and Rotation
         SerializedObject so = new SerializedObject(currentSetting);
-        SerializedProperty sp = so.GetIterator();
-        while (sp.NextVisible(true))
-        {
-            if (sp.name == "m_Script") { continue; } //For some reason the reference to the C# Script shows up with this iterator. This manually hides this reference
-            PropertyField pf = new PropertyField(sp, sp.name);
-            pf.Bind(so);
-            _shipSettingRoot.Add(pf);
-        }
+        SerializedProperty spThrottle = so.FindProperty("Throttle");
+        SerializedProperty spRotation = so.FindProperty("Rotation");
+        PropertyField pfThrottle = new PropertyField(spThrottle, "Throttle");
+        PropertyField pfRotation = new PropertyField(spRotation, "Rotation");
+        pfThrottle.Bind(so);
+        pfRotation.Bind(so);
+        _shipSettingRoot.Add(pfThrottle);
+        _shipSettingRoot.Add(pfRotation);
 
-
+        //Add Health reference, different approach since Health is not an Int value but a IntVariable ScriptableObject.
+        so = new SerializedObject(currentSetting.Health);
+        SerializedProperty spHealth = so.FindProperty("BaseValue");
+        PropertyField pfHealth = new PropertyField(spHealth, "Starting Health");
+        pfHealth.Bind(so);
+        _shipSettingRoot.Add(pfHealth);
 
         //Finally, add the visual element to the root
         _shipRoot.Add(_shipSettingRoot);
