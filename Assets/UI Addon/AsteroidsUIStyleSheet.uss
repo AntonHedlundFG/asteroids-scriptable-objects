@@ -1,0 +1,51 @@
+.asteroids-header {
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-left: 20px;
+}
+
+.asteroids-radiobutton {
+    font-size: 14px;
+    white-space: normal;
+    margin-left: 5px;
+}
+
+.asteroids-buttongroup {
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: rgba(255, 16, 16, 0.32);
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.asteroids-dropdown {
+    flex-direction: row;
+    width: 80%;
+    margin-left: 5%;
+    margin-bottom: 10px;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.asteroids-slider {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 80%;
+}
+
+.asteroids-intfield {
+    margin-left: 5%;
+    margin-right: 5%;
+    width: 40%;
+}
+
+.asteroids-serializeddata {
+    flex-grow: 1;
+    background-color: rgba(128, 120, 120, 0.27);
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border-bottom-right-radius: 30px;
+}

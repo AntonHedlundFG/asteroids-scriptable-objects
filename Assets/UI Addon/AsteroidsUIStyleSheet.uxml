@@ -1,0 +1,16 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <Style src="project://database/Assets/UI%20Addon/AsteroidsUIStyleSheet.uss?fileID=7433441132597879392&amp;guid=9108339845f0bfb459019ac34e28ac3a&amp;type=3#AsteroidsUIStyleSheet" />
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
+        <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="asteroids-header" />
+        <ui:GroupBox class="asteroids-buttongroup">
+            <ui:RadioButton label="Radio Button" class="asteroids-radiobutton" />
+            <ui:RadioButton label="Radio Button" class="asteroids-radiobutton" />
+            <ui:RadioButton label="Radio Button" class="asteroids-radiobutton" />
+        </ui:GroupBox>
+        <ui:DropdownField label="Dropdown" index="-1" choices="System.Collections.Generic.List`1[System.String]" class="asteroids-dropdown" />
+        <ui:VisualElement class="asteroids-serializeddata">
+            <ui:Slider picking-mode="Ignore" label="Slider" value="49.9" high-value="100" class="asteroids-slider" />
+            <ui:IntegerField label="Int Field" value="42" class="asteroids-intfield" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
