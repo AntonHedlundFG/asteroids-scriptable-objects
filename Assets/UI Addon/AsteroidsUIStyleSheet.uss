@@ -2,6 +2,7 @@
     font-size: 16px;
     -unity-font-style: bold;
     margin-left: 20px;
+    margin-top: 5px;
 }
 
 .asteroids-radiobutton {
@@ -14,10 +15,10 @@
     flex-direction: row;
     flex-wrap: wrap;
     background-color: rgba(255, 16, 16, 0.32);
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 
 .asteroids-dropdown {
@@ -44,8 +45,8 @@
 .asteroids-serializeddata {
     flex-grow: 1;
     background-color: rgba(128, 120, 120, 0.27);
-    border-top-left-radius: 30px;
-    border-bottom-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }

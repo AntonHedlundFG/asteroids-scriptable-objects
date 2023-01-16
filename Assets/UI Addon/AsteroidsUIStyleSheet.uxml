@@ -2,7 +2,7 @@
     <Style src="project://database/Assets/UI%20Addon/AsteroidsUIStyleSheet.uss?fileID=7433441132597879392&amp;guid=9108339845f0bfb459019ac34e28ac3a&amp;type=3#AsteroidsUIStyleSheet" />
     <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0);">
         <ui:Label tabindex="-1" text="Label" display-tooltip-when-elided="true" class="asteroids-header" />
-        <ui:GroupBox class="asteroids-buttongroup">
+        <ui:GroupBox class="asteroids-buttongroup" style="flex-direction: row;">
             <ui:RadioButton label="Radio Button" class="asteroids-radiobutton" />
             <ui:RadioButton label="Radio Button" class="asteroids-radiobutton" />
             <ui:RadioButton label="Radio Button" class="asteroids-radiobutton" />

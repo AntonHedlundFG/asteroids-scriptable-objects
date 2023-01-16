@@ -16,6 +16,8 @@ public class CustomAsteroidsInspector : EditorWindow
     private VisualElement _shipSettingRoot;
     private DropdownField _shipSettingDropdown;
 
+
+
     [MenuItem("Tools/Asteroids Inspector")]
     public static void ShowEditor()
     {
@@ -25,8 +27,16 @@ public class CustomAsteroidsInspector : EditorWindow
 
     public void CreateGUI()
     {
+        StyleSheet _styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UI Addon/AsteroidsUIStyleSheet.uss");
+        if(_styleSheet == null) { return; }
+        rootVisualElement.styleSheets.Add(_styleSheet);
+
         _asteroidsRoot = new VisualElement();
         _shipRoot = new VisualElement();
+
+        Label toolLabel = new Label("Tool choice:");
+        toolLabel.AddToClassList("asteroids-header");
+        rootVisualElement.Add(toolLabel);
 
         rootVisualElement.Add(GenerateRadioButtons());
 
@@ -42,16 +52,19 @@ public class CustomAsteroidsInspector : EditorWindow
     }
     private GroupBox GenerateRadioButtons()
     {
-        GroupBox radioButtons = new GroupBox("Tool choice:");
+        GroupBox radioButtons = new GroupBox();
+        radioButtons.AddToClassList("asteroids-buttongroup");
 
         RadioButton asteroidButton = new RadioButton("Asteroids");
         asteroidButton.RegisterValueChangedCallback(ShowAsteroidsGUI);
+        asteroidButton.AddToClassList("asteroids-radiobutton");
         radioButtons.Add(asteroidButton);
 
         RadioButton shipButton = new RadioButton("Ships");
         shipButton.RegisterValueChangedCallback(ShowShipGUI);
+        shipButton.AddToClassList("asteroids-radiobutton");
         radioButtons.Add(shipButton);
-
+        
         return radioButtons;
     }
 
@@ -75,12 +88,14 @@ public class CustomAsteroidsInspector : EditorWindow
     public void GenerateAsteroidGUI()
     {
         _asteroidSettingDropdown = DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset");
+        _asteroidSettingDropdown.AddToClassList("asteroids-dropdown");
         _asteroidsRoot.Add(_asteroidSettingDropdown);
         _asteroidSettingDropdown.RegisterValueChangedCallback(ChooseAsteroidSetting);
     }
     public void GenerateShipGUI()
     {
         _shipSettingDropdown = DropdownOfAllAssetsOfType<ShipSettings>("Ship Settings Asset");
+        _shipSettingDropdown.AddToClassList("asteroids-dropdown");
         _shipRoot.Add(_shipSettingDropdown);
         _shipSettingDropdown.RegisterValueChangedCallback(ChooseShipSetting);
 
@@ -97,6 +112,7 @@ public class CustomAsteroidsInspector : EditorWindow
 
         //Resets the visual element
         _asteroidSettingRoot = new VisualElement();
+        _asteroidSettingRoot.AddToClassList("asteroids-serializeddata");
 
         //Iterate through all visible values in the chosen AsteroidSettings instance, and show them in the editor. Also binds them so they are editable
         SerializedObject so = new SerializedObject(currentSetting);
@@ -105,6 +121,12 @@ public class CustomAsteroidsInspector : EditorWindow
         {
             if (sp.name == "m_Script") { continue; } //For some reason the reference to the C# Script shows up with this iterator. This manually hides this reference
             PropertyField pf = new PropertyField(sp, sp.name);
+            
+            if(sp.propertyType == SerializedPropertyType.Float)
+            {
+                pf.AddToClassList("asteroids-slider");
+            }
+
             pf.Bind(so);
             _asteroidSettingRoot.Add(pf);
         }
@@ -125,6 +147,7 @@ public class CustomAsteroidsInspector : EditorWindow
 
         //Resets the visual element
         _shipSettingRoot = new VisualElement();
+        _shipSettingRoot.AddToClassList("asteroids-serializeddata");
 
         AddThrottleAndRotation(currentSetting, _shipSettingRoot);
         AddHealth(currentSetting, _shipSettingRoot);
@@ -140,6 +163,8 @@ public class CustomAsteroidsInspector : EditorWindow
         SerializedProperty spRotation = so.FindProperty("Rotation");
         PropertyField pfThrottle = new PropertyField(spThrottle, "Throttle");
         PropertyField pfRotation = new PropertyField(spRotation, "Rotation");
+        pfThrottle.AddToClassList("asteroids-slider");
+        pfRotation.AddToClassList("asteroids-slider");
         pfThrottle.Bind(so);
         pfRotation.Bind(so);
         rootVE.Add(pfThrottle);
@@ -150,6 +175,7 @@ public class CustomAsteroidsInspector : EditorWindow
         SerializedObject so = new SerializedObject(setting.Health);
         SerializedProperty spHealth = so.FindProperty("BaseValue");
         PropertyField pfHealth = new PropertyField(spHealth, "Starting Health");
+        pfHealth.AddToClassList("asteroids-intfield");
         pfHealth.Bind(so);
         _shipSettingRoot.Add(pfHealth);
     }

@@ -3,7 +3,9 @@ guid: 2ec5c959a263f8c419e6cfebcfc9aa72
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - _styleSheet: {fileID: 7433441132597879392, guid: 9108339845f0bfb459019ac34e28ac3a, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
