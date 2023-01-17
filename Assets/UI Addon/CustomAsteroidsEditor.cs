@@ -5,7 +5,7 @@ using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class CustomAsteroidsInspector : EditorWindow
+public class CustomAsteroidsEditor : EditorWindow
 {
     private VisualElement _asteroidsRoot;
     private VisualElement _shipRoot;
@@ -21,7 +21,7 @@ public class CustomAsteroidsInspector : EditorWindow
     [MenuItem("Tools/Asteroids Inspector")]
     public static void ShowEditor()
     {
-        EditorWindow window = GetWindow<CustomAsteroidsInspector>();
+        EditorWindow window = GetWindow<CustomAsteroidsEditor>();
         window.titleContent = new GUIContent("Asteroids");
     }
 
@@ -120,15 +120,26 @@ public class CustomAsteroidsInspector : EditorWindow
         while (sp.NextVisible(true))
         {
             if (sp.name == "m_Script") { continue; } //For some reason the reference to the C# Script shows up with this iterator. This manually hides this reference
-            PropertyField pf = new PropertyField(sp, sp.name);
+            if (sp.depth > 0) { continue; } //Hides the internal float values of Vector2's
             
-            if(sp.propertyType == SerializedPropertyType.Float)
+            switch(sp.propertyType)
             {
-                pf.AddToClassList("asteroids-slider");
-            }
+                case SerializedPropertyType.Float:
+                    PropertyField pf = new PropertyField(sp, sp.name);
+                    pf.AddToClassList("asteroids-slider");
+                    pf.Bind(so);
+                    _asteroidSettingRoot.Add(pf);
+                    break;
 
-            pf.Bind(so);
-            _asteroidSettingRoot.Add(pf);
+                case SerializedPropertyType.Vector2:
+                    MinMaxSlider mms = new MinMaxSlider(sp.name);
+                    mms.lowLimit = 0f;
+                    mms.highLimit = 10f;
+                    mms.bindingPath = sp.propertyPath;
+                    mms.Bind(so);
+                    _asteroidSettingRoot.Add(mms);
+                    break;
+            }
         }
 
         //Finally, add the visual element to the root
