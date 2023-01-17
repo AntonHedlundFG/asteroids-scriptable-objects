@@ -133,6 +133,7 @@ public class CustomAsteroidsEditor : EditorWindow
 
                 case SerializedPropertyType.Vector2:
                     MinMaxSlider mms = new MinMaxSlider(sp.name);
+                    mms.AddToClassList("asteroids-slider");
                     mms.lowLimit = 0f;
                     mms.highLimit = 10f;
                     mms.bindingPath = sp.propertyPath;
