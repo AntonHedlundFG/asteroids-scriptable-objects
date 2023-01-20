@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 public class CustomAsteroidsEditor : EditorWindow
 {
+    //I am making these VisualElements fields in the class rather than defining them in the methods for the sake of ease of access, to avoid sending them back and forth between methods.
     private VisualElement _asteroidsRoot;
     private VisualElement _shipRoot;
 
@@ -27,6 +28,7 @@ public class CustomAsteroidsEditor : EditorWindow
 
     public void CreateGUI()
     {
+        //Manually loading the StyleSheet from an asset path. Not a lovely solution but it works.  Adding the stylesheet to the rootVisualElement allows all children to access the style classes.
         StyleSheet _styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Assets/UI Addon/AsteroidsUIStyleSheet.uss");
         if(_styleSheet == null) { return; }
         rootVisualElement.styleSheets.Add(_styleSheet);
@@ -42,49 +44,36 @@ public class CustomAsteroidsEditor : EditorWindow
 
         GenerateAsteroidGUI();
         rootVisualElement.Add(_asteroidsRoot);
-        _asteroidsRoot.visible = false;
 
-        
         GenerateShipGUI();
         rootVisualElement.Add(_shipRoot);
-        _shipRoot.visible = false;
 
+        //Both elements start out as invisible, as no radio button has been chosen yet.
+        _asteroidsRoot.visible = false;
+        _shipRoot.visible = false;
     }
+
     private GroupBox GenerateRadioButtons()
     {
         GroupBox radioButtons = new GroupBox();
-        radioButtons.AddToClassList("asteroids-buttongroup");
 
+        //Here we create the actual radio buttons to choose Asteroid or Ship settings, and register event callbacks to actually show the right settings when a button is chosen.
         RadioButton asteroidButton = new RadioButton("Asteroids");
         asteroidButton.RegisterValueChangedCallback(ShowAsteroidsGUI);
-        asteroidButton.AddToClassList("asteroids-radiobutton");
         radioButtons.Add(asteroidButton);
-
         RadioButton shipButton = new RadioButton("Ships");
         shipButton.RegisterValueChangedCallback(ShowShipGUI);
-        shipButton.AddToClassList("asteroids-radiobutton");
         radioButtons.Add(shipButton);
-        
+
+        //Setting Style Classes
+        radioButtons.AddToClassList("asteroids-buttongroup");
+        asteroidButton.AddToClassList("asteroids-radiobutton");
+        shipButton.AddToClassList("asteroids-radiobutton");
+
         return radioButtons;
     }
-
-    public void ShowAsteroidsGUI(ChangeEvent<bool> evt)
-    {
-        _asteroidsRoot.visible = evt.newValue;
-        if (evt.newValue == false)
-        {
-            _asteroidsRoot.BringToFront();
-        }
-    }
-    public void ShowShipGUI(ChangeEvent<bool> evt)
-    {
-        _shipRoot.visible = evt.newValue;
-        if (evt.newValue == false)
-        {
-            _shipRoot.BringToFront();
-        }
-    }
-
+    
+    //These two "GenerateXGUI" methods are called when the GUI is drawn, to find the settings assets and generate dropdown lists linking to them. Callback events for the dropdown menus are created here.
     public void GenerateAsteroidGUI()
     {
         _asteroidSettingDropdown = DropdownOfAllAssetsOfType<AsteroidSettings>("Asteroid Settings Asset");
@@ -98,12 +87,35 @@ public class CustomAsteroidsEditor : EditorWindow
         _shipSettingDropdown.AddToClassList("asteroids-dropdown");
         _shipRoot.Add(_shipSettingDropdown);
         _shipSettingDropdown.RegisterValueChangedCallback(ChooseShipSetting);
-
     }
+
+    //These two "ShowXGUI" methods are called by the registered Callback events from the radio buttons.
+    public void ShowAsteroidsGUI(ChangeEvent<bool> evt)
+    {
+        _asteroidsRoot.visible = evt.newValue;
+
+        //This makes sure the positioning works, otherwise the hidden Settings will affect the position of the visible Settings.
+        if (evt.newValue == false)
+        {
+            _asteroidsRoot.BringToFront();
+        }
+    }
+    public void ShowShipGUI(ChangeEvent<bool> evt)
+    {
+        _shipRoot.visible = evt.newValue;
+
+        //This makes sure the positioning works, otherwise the hidden Settings will affect the position of the visible Settings.
+        if (evt.newValue == false)
+        {
+            _shipRoot.BringToFront();
+        }
+    }
+    
+    //These two "ChooseXSetting" methods are called by the registered Callback events from the dropdown menus.
     public void ChooseAsteroidSetting(ChangeEvent<string> evt)
     {
-        if (_asteroidSettingDropdown.index < 0) { return; } //Do nothing if no item has been chosen
-        if (_asteroidSettingRoot != null) { _asteroidsRoot.Remove(_asteroidSettingRoot); } //Remove previously shown visual element
+        if (_asteroidSettingDropdown.index < 0) { return; } //Do nothing if no menu item has been chosen
+        if (_asteroidSettingRoot != null) { _asteroidsRoot.Remove(_asteroidSettingRoot); } //Clear previously shown visual element
         
 
         //Finds the currently chosen AsteroidSettings instance in the Dropdown menu
@@ -122,7 +134,7 @@ public class CustomAsteroidsEditor : EditorWindow
             if (sp.name == "m_Script") { continue; } //For some reason the reference to the C# Script shows up with this iterator. This manually hides this reference
             if (sp.depth > 0) { continue; } //Hides the internal float values of Vector2's
             
-            switch(sp.propertyType)
+            switch(sp.propertyType) //Creates different types of VisualElements depending on the current SerializedProperty's type
             {
                 case SerializedPropertyType.Float:
                     PropertyField pf = new PropertyField(sp, sp.name);
@@ -150,7 +162,7 @@ public class CustomAsteroidsEditor : EditorWindow
     public void ChooseShipSetting(ChangeEvent<string> evt)
     {
         if (_shipSettingDropdown.index < 0) { return; } //Do nothing if no item has been chosen
-        if (_shipSettingRoot != null) { _shipRoot.Remove(_shipSettingRoot); } //Remove previously shown visual element
+        if (_shipSettingRoot != null) { _shipRoot.Remove(_shipSettingRoot); } //Clear previously shown visual element
         
 
         //Finds the currently chosen ShipSettings instance in the Dropdown menu
@@ -168,6 +180,8 @@ public class CustomAsteroidsEditor : EditorWindow
         _shipRoot.Add(_shipSettingRoot);
     }
 
+    //These two "AddX" methods manually add visual elements and create bindings, rather than doing it dynamically as for the Asteroid settings.
+    //Because the Health field is actually an IntVariable SO, we want to specifically bind to its Value property rather than the Health field itself.
     private void AddThrottleAndRotation(ShipSettings setting, VisualElement rootVE)
     {
         SerializedObject so = new SerializedObject(setting);
@@ -191,6 +205,7 @@ public class CustomAsteroidsEditor : EditorWindow
         pfHealth.Bind(so);
         _shipSettingRoot.Add(pfHealth);
     }
+
 
     //Creates a Dropdown field containing all assets of a specific ScriptableObject type.
     public static DropdownField DropdownOfAllAssetsOfType<T>(string header) where T : ScriptableObject
